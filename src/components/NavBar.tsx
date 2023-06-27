@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { CSSProperties, useState } from "react";
 import {
   Box,
   Tooltip,
@@ -11,6 +11,7 @@ import {
 import { Favorite, Logout } from "@mui/icons-material";
 import { MouseEvent } from "react";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
+import { ColorModeToggle } from "./ColorModeToggle";
 
 const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -22,7 +23,7 @@ const NavBar = () => {
     setAnchorEl(null);
   };
   return (
-    <>
+    <Box sx={{ bgcolor: "background.default" }}>
       <Box
         sx={{
           display: "flex",
@@ -32,7 +33,14 @@ const NavBar = () => {
           px: 6,
         }}
       >
-        <Button sx={{ fontSize: "30px", color: "black" }}>Recipes</Button>
+        <Button
+          sx={{ fontSize: "20px", my: 1 }}
+          color="secondary"
+          variant="contained"
+        >
+          Recipes
+        </Button>
+        <ColorModeToggle sx={{ marginLeft: "auto" }} />
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
@@ -42,10 +50,16 @@ const NavBar = () => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            <Avatar
+              sx={{ width: 32, height: 32, bgcolor: "neutral.light" }}
+              variant="rounded"
+            >
+              M
+            </Avatar>
           </IconButton>
         </Tooltip>
       </Box>
+
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -91,7 +105,7 @@ const NavBar = () => {
           <Logout sx={{ mr: 1 }} /> Log out
         </MenuItem>
       </Menu>
-    </>
+    </Box>
   );
 };
 
