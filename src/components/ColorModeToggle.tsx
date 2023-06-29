@@ -11,7 +11,7 @@ export function ColorModeToggle({ sx }: Props) {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
   return (
-    <IconButton sx={{ ...sx }} onClick={colorMode.toggleColorMode} color="info">
+    <IconButton sx={{ ...sx }} onClick={colorMode.toggleColorMode}>
       {theme.palette.mode === "dark" ? (
         <Brightness7Icon />
       ) : (

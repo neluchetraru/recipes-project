@@ -1,4 +1,4 @@
-import { CSSProperties, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Tooltip,
@@ -7,11 +7,16 @@ import {
   Menu,
   MenuItem,
   Button,
+  useTheme,
+  Link,
 } from "@mui/material";
 import { Favorite, Logout } from "@mui/icons-material";
 import { MouseEvent } from "react";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import { ColorModeToggle } from "./ColorModeToggle";
+import useRecipe from "../hooks/useRecipe";
+import { UserAuth } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -21,6 +26,14 @@ const NavBar = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const navigate = useNavigate();
+  const { logout, user } = UserAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/auth");
   };
   return (
     <Box sx={{ bgcolor: "background.default" }}>
@@ -37,27 +50,29 @@ const NavBar = () => {
           sx={{ fontSize: "20px", my: 1 }}
           color="secondary"
           variant="contained"
+          href="/"
         >
           Recipes
         </Button>
         <ColorModeToggle sx={{ marginLeft: "auto" }} />
-        <Tooltip title="Account settings">
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? "account-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-          >
-            <Avatar
-              sx={{ width: 32, height: 32, bgcolor: "neutral.light" }}
-              variant="rounded"
+        {user && (
+          <Tooltip title="Options">
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
             >
-              M
-            </Avatar>
-          </IconButton>
-        </Tooltip>
+              <Avatar
+                sx={{ width: 32, height: 32, bgcolor: "neutral.light" }}
+                variant="rounded"
+                // alt={user.email}
+              />
+            </IconButton>
+          </Tooltip>
+        )}
       </Box>
 
       <Menu
@@ -95,13 +110,14 @@ const NavBar = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem sx={{ cursor: "initial" }}>{user?.email}</MenuItem>
+        <MenuItem component={Link} href="/favorites">
           <Favorite sx={{ mr: 1 }} /> Favorites
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem component={Link} href="/userRecipes">
           <BookmarksIcon sx={{ mr: 1 }} /> My recipes
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem component={Link} onClick={() => handleLogout()}>
           <Logout sx={{ mr: 1 }} /> Log out
         </MenuItem>
       </Menu>

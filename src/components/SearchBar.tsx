@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import { TextField, InputAdornment, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 
-const SearchBar = () => {
+const SearchBar = ({ onSearch }: { onSearch: (e: string) => void }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   return (
     <Grid container display="flex" justifyContent="center">
       <Grid xs={10} sm={8} md={6}>
@@ -13,13 +14,19 @@ const SearchBar = () => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton>
-                  <SearchIcon />
+                <IconButton
+                  onClick={() => {
+                    onSearch(inputRef?.current?.value || "");
+                  }}
+                >
+                  <SearchIcon color="info" />
                 </IconButton>
               </InputAdornment>
             ),
           }}
-          variant="standard"
+          inputRef={inputRef}
+          variant="filled"
+          color="info"
         />
       </Grid>
     </Grid>
