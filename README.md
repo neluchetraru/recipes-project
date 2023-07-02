@@ -36,7 +36,7 @@ In this web application you can search recipes of any kind. Besides seraching, y
 Clone the repository and change the current directory:
 
 ```Bash
-git clone && cd recipes_project
+git clone https://github.com/neluchetraru/recipes-project && cd recipes-project
 ```
 
 Install the dependencies:
