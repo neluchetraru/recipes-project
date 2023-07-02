@@ -7,7 +7,6 @@ const apiClient = new APIClient<RecipeResponse>('/recipes')
 interface AnalyzedInstruction {
     number: number;
     step: string,
-
 }
 
 interface RecipeResponse {
@@ -19,13 +18,10 @@ interface RecipeResponse {
     analyzedInstructions: [{ name: string, steps: AnalyzedInstruction[] }]
 }
 
-
-
 interface ExtendedIngredients {
     name: string;
     original: string;
 }
-
 
 const useRecipe = (id: number) => useQuery({
     queryKey: ['recipe', id],

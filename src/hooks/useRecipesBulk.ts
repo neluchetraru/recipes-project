@@ -9,7 +9,6 @@ interface AnalyzedInstruction {
     step: string,
 
 }
-
 interface RecipeResponse {
     dishTypes: [string],
     readyInMinutes: number,
@@ -21,10 +20,6 @@ interface RecipeResponse {
     image: string,
     id: number;
 }
-
-
-
-
 interface ExtendedIngredients {
     name: string;
     original: string;

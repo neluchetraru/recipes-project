@@ -1,23 +1,15 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import APIClient from '../services/api-client'
+import { RecipeSimple } from '../entities';
 
-export interface RecipeComplex {
-    id: number,
-    title: string,
-    image: string
-}
 
 export interface RecipesResponse {
-    results: RecipeComplex[];
+    results: RecipeSimple[];
     offset: number;
     number: number;
     totalResults: number;
 }
-
-
-
 const apiClient = new APIClient<RecipesResponse>('/recipes')
-
 
 const useRecipes = (query: string) => useInfiniteQuery({
     queryKey: ['recipes', query],
