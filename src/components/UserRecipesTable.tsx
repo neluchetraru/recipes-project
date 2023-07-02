@@ -10,32 +10,11 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React from "react";
+import useUserQueryStore from "../store";
 
-interface Props {
-  recipes: any[];
-  setUserRecipes: any;
-}
-
-// interface UserRecipes {
-//   id: string;
-//   image: string;
-//   title: string;
-//   method: string;
-//   ingredients: string[];
-// }
-const UserRecipesTable = ({ recipes, setUserRecipes }: Props) => {
-  const handleDelete = (title: string) => {
-    let currentRecipes = JSON.parse(
-      localStorage.getItem("userRecipes") || "[]"
-    );
-    currentRecipes = currentRecipes.filter(
-      (recipe: any) => recipe.title !== title
-    );
-    console.log(currentRecipes);
-    setUserRecipes(currentRecipes);
-    localStorage.setItem("userRecipes", JSON.stringify(currentRecipes));
-  };
+const UserRecipesTable = () => {
+  const userRecipes = useUserQueryStore((s) => s.userQuery.userRecipes);
+  const deleteUserRecipe = useUserQueryStore((s) => s.deleteUserRecipe);
 
   return (
     <TableContainer component={Paper}>
@@ -50,14 +29,10 @@ const UserRecipesTable = ({ recipes, setUserRecipes }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {recipes.map((recipe) => (
+          {userRecipes.map((recipe) => (
             <TableRow key={recipe.title}>
               <TableCell width="100px">
-                <Box
-                  component="img"
-                  src={`data:image/jpeg;base64,${recipe.image}`}
-                  width="100px"
-                />
+                <Box component="img" src={recipe.image} width="100px" />
               </TableCell>
               <TableCell>{recipe.title}</TableCell>
               <TableCell>{recipe.method}</TableCell>
@@ -65,7 +40,7 @@ const UserRecipesTable = ({ recipes, setUserRecipes }: Props) => {
               <TableCell>
                 <IconButton
                   color="error"
-                  onClick={() => handleDelete(recipe.title)}
+                  onClick={() => deleteUserRecipe(recipe.id)}
                 >
                   <Delete />
                 </IconButton>

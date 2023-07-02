@@ -7,15 +7,13 @@ import {
   Menu,
   MenuItem,
   Button,
-  useTheme,
   Link,
 } from "@mui/material";
 import { Favorite, Logout } from "@mui/icons-material";
 import { MouseEvent } from "react";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
-import { ColorModeToggle } from "./ColorModeToggle";
-import useRecipe from "../hooks/useRecipe";
-import { UserAuth } from "../AuthContext";
+import ColorModeToggle from "./ColorModeToggle";
+import { UserAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
@@ -35,6 +33,7 @@ const NavBar = () => {
     await logout();
     navigate("/auth");
   };
+
   return (
     <Box sx={{ bgcolor: "background.default" }}>
       <Box
@@ -48,31 +47,32 @@ const NavBar = () => {
       >
         <Button
           sx={{ fontSize: "20px", my: 1 }}
-          color="secondary"
+          color="primary"
           variant="contained"
           href="/"
         >
           Recipes
         </Button>
-        <ColorModeToggle sx={{ marginLeft: "auto" }} />
-        {user && (
-          <Tooltip title="Options">
-            <IconButton
-              onClick={handleClick}
-              size="small"
-              sx={{ ml: 2 }}
-              aria-controls={open ? "account-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-            >
-              <Avatar
-                sx={{ width: 32, height: 32, bgcolor: "neutral.light" }}
-                variant="rounded"
-                // alt={user.email}
-              />
-            </IconButton>
-          </Tooltip>
-        )}
+        <Box>
+          <ColorModeToggle />
+          {user && (
+            <Tooltip title="Options">
+              <IconButton
+                onClick={handleClick}
+                size="small"
+                sx={{ ml: 2 }}
+                aria-controls={open ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+              >
+                <Avatar
+                  sx={{ width: 32, height: 32, bgcolor: "neutral.light" }}
+                  variant="rounded"
+                />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Box>
       </Box>
 
       <Menu

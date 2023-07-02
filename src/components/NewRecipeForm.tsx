@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState, ChangeEvent } from "react";
+import { useState, ChangeEvent } from "react";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import { v4 as uuid } from "uuid";
 import * as Yup from "yup";
 import {
   Box,
@@ -17,8 +16,7 @@ import {
 import ListIcon from "@mui/icons-material/List";
 import AddIcon from "@mui/icons-material/Add";
 import { useFormik } from "formik";
-import { arrayBufferToBase64 } from "../utils";
-import { UserAuth } from "../AuthContext";
+import useUserQueryStore from "../store";
 
 const NewRecipeSchema = Yup.object().shape({
   title: Yup.string()
@@ -32,61 +30,63 @@ const NewRecipeSchema = Yup.object().shape({
   ingredients: Yup.array().of(Yup.string()),
   image: Yup.mixed().required("Image is required"),
 });
+
 interface Props {
-  handleCancel: () => void;
+  handleCancelClick: () => void;
 }
 
-const NewRecipeForm = ({ handleCancel }: Props) => {
-  const [newIngredient, setNewIngredient] = useState("");
-  const { user } = UserAuth();
+interface FormValues {
+  title: string;
+  method: string;
+  ingredients: string[];
+  image: string;
+  id: number;
+}
 
-  const formik = useFormik({
+const NewRecipeForm = ({ handleCancelClick }: Props) => {
+  const [newIngredient, setNewIngredient] = useState("");
+  const addUserRecipe = useUserQueryStore((s) => s.addUserRecipe);
+
+  const formik = useFormik<FormValues>({
     initialValues: {
       title: "",
       method: "",
-      ingredients: [""],
+      ingredients: [] as string[],
       image: "",
-      uuid: user?.uid,
+      id: Date.now(),
     },
+
     validationSchema: NewRecipeSchema,
     onSubmit: (values) => {
       handleSubmit(values);
-      if (formik.isValid) handleCancel();
     },
   });
 
-  const handleSubmit = (values: {
-    title: string;
-    method: string;
-    ingredients: string[];
-    image: string;
-  }) => {
-    const currentRecipes = JSON.parse(
-      localStorage.getItem("userRecipes") || "[]"
-    );
-    localStorage.setItem(
-      "userRecipes",
-      JSON.stringify([...currentRecipes, values])
-    );
+  const handleSubmit = (values: FormValues) => {
+    console.log(values);
+    addUserRecipe(values);
+    if (formik.isValid) handleCancelClick();
   };
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>): void => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = async (e) => {
-        const arrayBuffer = e.target?.result as ArrayBuffer;
-        const base64String = arrayBufferToBase64(arrayBuffer);
-        formik.setValues({ ...formik.values, image: base64String });
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        if (reader.result) {
+          formik.setValues({
+            ...formik.values,
+            image: reader.result.toString(),
+          });
+        }
       };
-
-      reader.readAsArrayBuffer(file);
     }
   };
 
   return (
     <>
-      <Typography variant="h3" textAlign="center" color="primary.light">
+      <Typography variant="h3" textAlign="center" color="text.primary">
         Add a new recipe
       </Typography>
       <FormControl sx={{ mt: 4 }} fullWidth>
@@ -97,6 +97,7 @@ const NewRecipeForm = ({ handleCancel }: Props) => {
               sx={{ mt: 2 }}
               name="title"
               fullWidth
+              color="secondary"
               value={formik.values.title}
               onChange={formik.handleChange}
               error={formik.touched.title && Boolean(formik.errors.title)}
@@ -107,6 +108,7 @@ const NewRecipeForm = ({ handleCancel }: Props) => {
               sx={{ mt: 2 }}
               fullWidth
               multiline
+              color="secondary"
               rows={4}
               value={formik.values.method}
               name="method"
@@ -115,8 +117,8 @@ const NewRecipeForm = ({ handleCancel }: Props) => {
               helperText={formik.touched.method && formik.errors.method}
             />
             <Box mt={2} mb={1} display="flex" alignItems="center">
-              <ListIcon color="primary" />
-              <Typography color="primary" ml={1}>
+              <ListIcon color="secondary" />
+              <Typography ml={1} color="text.primary" variant="h5">
                 List of ingredients
               </Typography>
             </Box>
@@ -125,7 +127,7 @@ const NewRecipeForm = ({ handleCancel }: Props) => {
                 (ingredient) =>
                   ingredient !== "" && (
                     <ListItem key={ingredient}>
-                      <Typography ml={2} color="primary">
+                      <Typography ml={2} color="text.primary">
                         {ingredient}
                       </Typography>
                     </ListItem>
@@ -155,6 +157,7 @@ const NewRecipeForm = ({ handleCancel }: Props) => {
                           });
                           setNewIngredient("");
                         }}
+                        color="secondary"
                       >
                         <AddIcon />
                       </IconButton>
@@ -164,10 +167,11 @@ const NewRecipeForm = ({ handleCancel }: Props) => {
                 onChange={(e) => setNewIngredient(e.target.value)}
                 value={newIngredient}
                 placeholder="New ingredient"
+                color="secondary"
               />
             </Box>
             <Box display="flex" alignItems="center" mt={2}>
-              <Button variant="outlined" component="label">
+              <Button variant="outlined" component="label" color="secondary">
                 Upload File
                 <input
                   type="file"
@@ -176,7 +180,7 @@ const NewRecipeForm = ({ handleCancel }: Props) => {
                   accept="image/*"
                 />
               </Button>
-              <Typography ml={1} color="primary">
+              <Typography ml={1} color="text.primary">
                 {formik.values.image === "" && "No file selected"}
               </Typography>
             </Box>
@@ -189,7 +193,7 @@ const NewRecipeForm = ({ handleCancel }: Props) => {
               <CardMedia
                 sx={{ mt: 2 }}
                 component="img"
-                image={`data:image/jpeg;base64,${formik.values.image}`}
+                image={formik.values.image}
                 alt="Wrong Format"
               />
             )}
@@ -205,7 +209,7 @@ const NewRecipeForm = ({ handleCancel }: Props) => {
                 color="secondary"
                 variant="contained"
                 sx={{ ml: 2 }}
-                onClick={handleCancel}
+                onClick={handleCancelClick}
               >
                 Cancel
               </Button>

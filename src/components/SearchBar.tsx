@@ -19,14 +19,14 @@ const SearchBar = ({ onSearch }: { onSearch: (e: string) => void }) => {
                     onSearch(inputRef?.current?.value || "");
                   }}
                 >
-                  <SearchIcon color="info" />
+                  <SearchIcon color="secondary" />
                 </IconButton>
               </InputAdornment>
             ),
           }}
           inputRef={inputRef}
           variant="filled"
-          color="info"
+          color="secondary"
         />
       </Grid>
     </Grid>

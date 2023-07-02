@@ -3,33 +3,30 @@ import {
   CardHeader,
   CardMedia,
   CardActions,
-  CardContent,
-  Box,
   Button,
-  useTheme,
 } from "@mui/material";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useState } from "react";
 import RecipeModal from "./RecipeModal";
+import { RecipeSimple } from "../entities";
 
-interface Recipe {
-  image: string;
-  id: number;
-  title: string;
-}
-
-const RecipeCard = ({ id, title, image }: Recipe) => {
+const RecipeCard = ({ recipe }: { recipe: RecipeSimple }) => {
   const [openModal, setOpenModal] = useState(false);
   return (
     <>
       <Card elevation={5} sx={{ display: "flex", flexDirection: "column" }}>
-        <CardMedia component="img" image={image} src={title} height={200} />
-        <CardHeader title={title} />
+        <CardMedia
+          component="img"
+          image={recipe.image}
+          src={recipe.title}
+          height={200}
+        />
+        <CardHeader title={recipe.title} />
         <CardActions sx={{ marginTop: "auto" }}>
           <Button
             sx={{}}
             variant="contained"
             onClick={() => setOpenModal(true)}
+            color="secondary"
           >
             See recipe
           </Button>
@@ -39,9 +36,7 @@ const RecipeCard = ({ id, title, image }: Recipe) => {
         <RecipeModal
           handleClose={() => setOpenModal(false)}
           open={openModal}
-          id={id}
-          title={title}
-          image={image}
+          recipe={recipe}
         />
       )}
     </>

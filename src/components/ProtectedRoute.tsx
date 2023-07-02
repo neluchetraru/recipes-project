@@ -1,7 +1,5 @@
-import React, { ReactNode } from "react";
-import { UserAuth } from "../AuthContext";
+import { UserAuth } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
-import { User } from "firebase/auth";
 import Loading from "./Loading";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {

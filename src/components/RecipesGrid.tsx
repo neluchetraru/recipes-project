@@ -1,25 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import RecipeCard from "./RecipeCard";
 import Grid from "@mui/material/Unstable_Grid2";
-import initialRecipes from "../recipes";
-import useRecipes, {
-  RecipeComplex,
-  RecipesResponse,
-} from "../hooks/useRecipes";
-import {
-  Box,
-  Card,
-  CircularProgress,
-  Skeleton,
-  Typography,
-} from "@mui/material";
+import { RecipesResponse } from "../hooks/useRecipes";
+import { Box, Typography } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { FetchResponse } from "../services/api-client";
 import {
   InfiniteData,
   InfiniteQueryObserverResult,
-  UseInfiniteQueryResult,
-  UseQueryResult,
 } from "@tanstack/react-query";
 import SkeletonCard from "./SkeletonCard";
 
@@ -50,7 +37,7 @@ const RecipesGrid = ({
       </Box>
     );
 
-  const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   return (
     <InfiniteScroll
@@ -76,11 +63,7 @@ const RecipesGrid = ({
                 {page.results.map((recipe) => (
                   <React.Fragment key={recipe.id}>
                     <Grid xs={12} sm={6} md={3} lg={2} display="flex">
-                      <RecipeCard
-                        id={recipe.id}
-                        title={recipe.title}
-                        image={recipe.image}
-                      />
+                      <RecipeCard recipe={recipe} />
                     </Grid>
                   </React.Fragment>
                 ))}

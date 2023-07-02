@@ -14,75 +14,75 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import LabelIcon from "@mui/icons-material/Label";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import useRecipe from "../hooks/useRecipe";
+import useUserQueryStore from "../store";
+import { RecipeSimple } from "../entities";
+
 interface Props {
   open: boolean;
   handleClose: () => void;
-  id: number;
-  title: string;
-  image: string;
+  recipe: RecipeSimple;
 }
 
-const RecipeModal = ({ open, handleClose, id, title, image }: Props) => {
+const RecipeModal = ({
+  open,
+  handleClose,
+  recipe: { id, title, image },
+}: Props) => {
+  const userFavorites = useUserQueryStore((s) => s.userQuery.userFavorites);
+  const deleteUserFavorites = useUserQueryStore((s) => s.deleteUserFavorite);
+  const addUserFavorites = useUserQueryStore((s) => s.addUserFavorite);
   const [saved, setSaved] = useState(
-    JSON.parse(localStorage.getItem("userFavorites") || "[]").find(
-      (favorite: number) => favorite === id
-    )
+    userFavorites.find((favorite: number) => favorite === id) ? true : false
   );
 
   const { data, isLoading } = useRecipe(id);
 
   const toggleSave = () => {
-    setSaved(!saved);
-    const userFavorites = JSON.parse(
-      localStorage.getItem("userFavorites") || "[]"
-    );
-    if (!saved) {
-      localStorage.setItem(
-        "userFavorites",
-        JSON.stringify([...userFavorites, id])
-      );
+    if (saved) {
+      deleteUserFavorites(id);
     } else {
-      let userFavorites = JSON.parse(
-        localStorage.getItem("userFavorites") || "[]"
-      );
-      userFavorites = userFavorites.filter(
-        (favorite: number) => favorite !== id
-      );
-
-      console.log(userFavorites);
-      localStorage.setItem("userFavorites", JSON.stringify(userFavorites));
+      addUserFavorites(id);
     }
+    setSaved(!saved);
   };
 
   return (
     <Modal
       open={open}
       onClose={handleClose}
-      sx={{ color: "black", overflow: "scroll" }}
+      sx={{
+        color: "text.primary",
+        overflow: "scroll",
+      }}
     >
       <Container
-        maxWidth="sm"
-        sx={{ background: "white", mt: 20, padding: 3, borderRadius: 2 }}
+        maxWidth="md"
+        sx={{
+          backgroundColor: "background.default",
+          my: 10,
+          padding: 3,
+          borderRadius: 2,
+        }}
       >
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography fontSize="30px">{title}</Typography>
+          <Typography variant="h4">{title}</Typography>
           <Box display="flex">
             <Tooltip title={saved ? "Unsave" : "Save"}>
               <IconButton onClick={toggleSave}>
                 {saved ? (
-                  <Favorite fontSize="large" />
+                  <Favorite fontSize="large" color="secondary" />
                 ) : (
-                  <FavoriteBorder fontSize="large" />
+                  <FavoriteBorder fontSize="large" color="secondary" />
                 )}
               </IconButton>
             </Tooltip>
             <Tooltip title="Close">
-              <IconButton onClick={handleClose}>
+              <IconButton onClick={handleClose} color="secondary">
                 <CloseIcon fontSize="large" />
               </IconButton>
             </Tooltip>
@@ -90,46 +90,54 @@ const RecipeModal = ({ open, handleClose, id, title, image }: Props) => {
         </Box>
         {isLoading ? (
           <Box display="flex" justifyContent="center">
-            <CircularProgress />
+            <CircularProgress color="secondary" />
           </Box>
         ) : (
-          <Grid container spacing={2} my={1}>
-            <Grid sm={4} xs={12}>
-              <Card>
-                <CardMedia component="img" src={image} />
-              </Card>
-              <Typography variant="body2" mt={2}>
-                Ingredients:
-              </Typography>
-              <List>
-                {data?.extendedIngredients.map((ingredient) => (
-                  <ListItem key={ingredient.original}>
-                    {ingredient.original}
-                  </ListItem>
-                ))}
-              </List>
-            </Grid>
+          <>
+            {" "}
+            <Grid container spacing={2} my={1}>
+              <Grid sm={4} xs={12}>
+                <Card>
+                  <CardMedia component="img" src={image} />
+                </Card>
+                <Typography variant="h5" mt={2}>
+                  Ingredients:
+                </Typography>
+                <List>
+                  {data?.extendedIngredients.map((ingredient) => (
+                    <ListItem key={ingredient.original}>
+                      {ingredient.original}
+                    </ListItem>
+                  ))}
+                </List>
+              </Grid>
 
-            <Grid sm={8} xs={12}>
-              <Typography variant="h5">Method:</Typography>
-              <List>
-                {data?.analyzedInstructions[0].steps.map((instruction) => (
-                  <ListItem key={instruction.number}>
-                    {instruction.step}
-                  </ListItem>
-                ))}
-              </List>
+              <Grid sm={8} xs={12}>
+                <Typography variant="h5">Method:</Typography>
+                <List>
+                  {data?.analyzedInstructions[0].steps.map((instruction) => (
+                    <ListItem key={instruction.number}>
+                      {instruction.step}
+                    </ListItem>
+                  ))}
+                </List>
+              </Grid>
             </Grid>
-          </Grid>
+            <Divider />
+            <Box display="flex" my={1} alignItems="center">
+              <LabelIcon color="primary" />
+              {data?.dishTypes.map((type) => (
+                <Chip
+                  key={type}
+                  label={type}
+                  sx={{ ml: 1 }}
+                  color="secondary"
+                ></Chip>
+              ))}
+            </Box>
+            <Divider />
+          </>
         )}
-        <Divider />
-        <Box display="flex" my={1}>
-          <LabelIcon />
-          {data?.dishTypes.map((type) => (
-            <Chip key={type} label={type} sx={{ ml: 1 }}></Chip>
-          ))}
-        </Box>
-        <Divider />
       </Container>
     </Modal>
   );
