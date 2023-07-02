@@ -5,15 +5,12 @@ import { ColorModeContext, useMode } from "./theme";
 
 import Home from "./pages/Home";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import About from "./pages/Favorites";
 import UserRecipes from "./pages/UserRecipes";
 import Favorites from "./pages/Favorites";
 import NavBar from "./components/NavBar";
-import useRecipe from "./hooks/useRecipe";
-import { AuthContextProvider, UserAuth } from "./AuthContext";
-import Auth from "./pages/Auth";
+import { AuthContextProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Loading from "./components/Loading";
+import AuthLayout from "./layout/AuthLayout";
 // import useRecipe from "./hooks/useRecipe";
 
 const queryClient = new QueryClient();
@@ -53,7 +50,7 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-                <Route path="/auth" element={<Auth />} />
+                <Route path="/auth" element={<AuthLayout />} />
               </Routes>
               <ReactQueryDevtools />
             </AuthContextProvider>

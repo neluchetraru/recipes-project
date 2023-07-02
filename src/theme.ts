@@ -1,12 +1,12 @@
 import {
     createContext,
-    useState,
     useMemo
 } from 'react';
 
 import {
     createTheme
 } from '@mui/material';
+import useUserQueryStore from './store';
 
 // color design tokens -> all the colors we use
 
@@ -36,14 +36,15 @@ export const ColorModeContext = createContext({ toggleColorMode: () => { } });
 
 
 export const useMode = () => {
-    const [mode, setMode] = useState<"light" | "dark">("light");
+    const mode = useUserQueryStore(s => s.userQuery.colorMode)
+    const setColorMode = useUserQueryStore(s => s.setColorMode)
     const colorMode = useMemo(
         () => ({
             toggleColorMode: () => {
-                setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+                setColorMode(mode === "light" ? "dark" : "light");
             },
         }),
-        []
+        [mode]
     );
 
     const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);

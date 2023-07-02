@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import APIClient from '../services/api-client'
 import { RecipeSimple } from '../entities';
 
