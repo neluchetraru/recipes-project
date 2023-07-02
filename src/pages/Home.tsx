@@ -1,13 +1,10 @@
-import React, { useState } from "react";
-import NavBar from "../components/NavBar";
+import { useState } from "react";
 import RecipesGrid from "../components/RecipesGrid";
-import { Box, Container, Divider, useTheme } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import SearchBar from "../components/SearchBar";
-import useRecipe from "../hooks/useRecipe";
 import useRecipes from "../hooks/useRecipes";
 
 const Home = () => {
-  const { palette } = useTheme();
   const [searchBarValue, setSearchBarValue] = useState("");
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
     useRecipes(searchBarValue);
@@ -19,7 +16,7 @@ const Home = () => {
         flexDirection: "column",
         flex: 1,
       }}
-      bgcolor={palette.background.default}
+      bgcolor="background.default"
     >
       <Divider />
       <Box pt={5}>

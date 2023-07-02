@@ -1,17 +1,20 @@
-import React from "react";
-import RecipesGrid from "../components/RecipesGrid";
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import useRecipesBulk from "../hooks/useRecipesBulk";
 import RecipeCard from "../components/RecipeCard";
+import useUserQueryStore from "../store";
 import Loading from "../components/Loading";
 
 const Favorites = () => {
-  const favorites = JSON.parse(localStorage.getItem("userFavorites") || "[]");
-  const { data, isLoading } = useRecipesBulk(favorites);
-  if (isLoading)
+  const userFavorites = useUserQueryStore((s) => s.userQuery.userFavorites);
+  const { data, isLoading, isError } = useRecipesBulk(userFavorites);
+  if (isLoading) return <Loading />;
+  if (isError)
     return (
-      <Box display="flex" justifyContent="center" mt={2}>
-        <CircularProgress />
+      <Box mx={5} mt={2}>
+        <Typography color="error" variant="h4">
+          Something went wrong while processing your request. Check your
+          connection and try again later.
+        </Typography>
       </Box>
     );
   if (data?.length === 0 || data === undefined) {
@@ -37,11 +40,7 @@ const Favorites = () => {
               key={recipe.id}
               display="flex"
             >
-              <RecipeCard
-                id={recipe.id}
-                title={recipe.title}
-                image={recipe.image}
-              />
+              <RecipeCard recipe={recipe} />
             </Grid>
           );
         })}

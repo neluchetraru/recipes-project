@@ -1,33 +1,31 @@
-import React, { useEffect, useState } from "react";
-import NavBar from "../components/NavBar";
+import { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import NewRecipeForm from "../components/NewRecipeForm";
 import UserRecipesTable from "../components/UserRecipesTable";
 import { Add } from "@mui/icons-material";
+import useUserQueryStore from "../store";
 
 const UserRecipes = () => {
-  const [userRecipes, setUserRecipes] = useState([]);
+  const userRecipes = useUserQueryStore((s) => s.userQuery.userRecipes);
   const [displayForm, setDisplayForm] = useState(false);
-  useEffect(() => {
-    setUserRecipes(JSON.parse(localStorage.getItem("userRecipes") || "[]"));
-  }, [displayForm]);
 
   if (displayForm)
     return (
       <Box flex={1} bgcolor="background.default">
-        <NewRecipeForm handleCancel={() => setDisplayForm(false)} />
+        <NewRecipeForm handleCancelClick={() => setDisplayForm(false)} />
       </Box>
     );
   if (userRecipes.length === 0)
     return (
-      <Box flex={1}>
-        <Box mx="50px" mt={2} display="flex" alignItems="center">
-          <Typography color="black">
+      <Box flex={1} bgcolor="background.default" pt={3}>
+        <Box mx="50px" pt={2} display="flex" alignItems="center">
+          <Typography color="text.primary">
             You don't have any recipes created yet. Start by pressing on the add
             button...
           </Typography>
           <Button
             variant="contained"
+            color="secondary"
             sx={{ ml: 2 }}
             onClick={() => setDisplayForm(true)}
             startIcon={<Add />}
@@ -38,17 +36,20 @@ const UserRecipes = () => {
       </Box>
     );
   return (
-    <Box mx={4} flex={1}>
+    <Box px={4} flex={1} pt={3} bgcolor="background.default">
       <Button
         variant="contained"
         sx={{ ml: 2 }}
         onClick={() => setDisplayForm(true)}
         startIcon={<Add />}
+        color="secondary"
       >
         Add recipe
       </Button>
-      <Typography>My recipes:</Typography>
-      <UserRecipesTable recipes={userRecipes} setUserRecipes={setUserRecipes} />
+      <Typography variant="h4" mt={4} mb={2}>
+        My recipes:
+      </Typography>
+      <UserRecipesTable />
     </Box>
   );
 };
