@@ -18,6 +18,7 @@ const queryClient = new QueryClient();
 export default function App() {
   const [colorMode, theme] = useMode();
   const base_url = import.meta.env.BASE_URL;
+  console.log(base_url);
   return (
     <ColorModeContext.Provider value={colorMode}>
       <QueryClientProvider client={queryClient}>
