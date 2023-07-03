@@ -29,7 +29,7 @@ const Signup = () => {
   }) => {
     try {
       await createUser(email, password);
-      navigate(import.meta.env.BASE_URL);
+      navigate("/");
     } catch (e) {
       if (e instanceof FirebaseError && e.code == AuthErrorCodes.EMAIL_EXISTS)
         setError("This user already exists.");

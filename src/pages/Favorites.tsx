@@ -10,7 +10,7 @@ const Favorites = () => {
   if (isLoading) return <Loading />;
   if (isError)
     return (
-      <Box mx={5} mt={2}>
+      <Box px={5} pt={2}>
         <Typography color="error" variant="h4">
           Something went wrong while processing your request. Check your
           connection and try again later.
@@ -27,8 +27,8 @@ const Favorites = () => {
     );
   }
   return (
-    <Box flex={1}>
-      <Grid container spacing={2} sx={{ mx: "50px" }}>
+    <Box flex={1} pt={5} px={6} bgcolor="background.default">
+      <Grid container spacing={2}>
         {data?.map((recipe) => {
           return (
             <Grid

@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   }
 
   if (!user) {
-    return <Navigate to={import.meta.env.BASE_URL + "auth"} />;
+    return <Navigate to="/auth" />;
   }
 
   return children;
