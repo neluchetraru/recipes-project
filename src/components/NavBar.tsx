@@ -31,7 +31,7 @@ const NavBar = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate("/auth");
+    navigate(import.meta.env.BASE_URL + "auth");
   };
 
   return (
@@ -49,7 +49,7 @@ const NavBar = () => {
           sx={{ fontSize: "20px", my: 1 }}
           color="primary"
           variant="contained"
-          href="/"
+          href={import.meta.env.BASE_URL}
         >
           Recipes
         </Button>
@@ -111,10 +111,16 @@ const NavBar = () => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem sx={{ cursor: "initial" }}>{user?.email}</MenuItem>
-        <MenuItem component={Link} href="/favorites">
+        <MenuItem
+          component={Link}
+          href={import.meta.env.BASE_URL + "favorites"}
+        >
           <Favorite sx={{ mr: 1 }} /> Favorites
         </MenuItem>
-        <MenuItem component={Link} href="/userRecipes">
+        <MenuItem
+          component={Link}
+          href={import.meta.env.BASE_URL + "userRecipes"}
+        >
           <BookmarksIcon sx={{ mr: 1 }} /> My recipes
         </MenuItem>
         <MenuItem component={Link} onClick={() => handleLogout()}>

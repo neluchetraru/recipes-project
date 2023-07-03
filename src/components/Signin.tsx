@@ -24,7 +24,7 @@ const Signin = () => {
   }) => {
     try {
       await signIn(email, password);
-      navigate("/");
+      navigate(import.meta.env.BASE_URL);
     } catch (e) {
       setError("Invalid credentials!");
     }

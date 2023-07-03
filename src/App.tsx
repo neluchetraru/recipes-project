@@ -17,7 +17,7 @@ const queryClient = new QueryClient();
 
 export default function App() {
   const [colorMode, theme] = useMode();
-
+  const base_url = import.meta.env.BASE_URL;
   return (
     <ColorModeContext.Provider value={colorMode}>
       <QueryClientProvider client={queryClient}>
@@ -27,7 +27,7 @@ export default function App() {
               <NavBar />
               <Routes>
                 <Route
-                  path="/"
+                  path={base_url}
                   element={
                     <ProtectedRoute>
                       <Home />
@@ -35,7 +35,7 @@ export default function App() {
                   }
                 />
                 <Route
-                  path="/favorites"
+                  path={base_url + "favorites"}
                   element={
                     <ProtectedRoute>
                       <Favorites />
@@ -43,14 +43,14 @@ export default function App() {
                   }
                 />
                 <Route
-                  path="/userRecipes"
+                  path={base_url + "userRecipes"}
                   element={
                     <ProtectedRoute>
                       <UserRecipes />
                     </ProtectedRoute>
                   }
                 />
-                <Route path="/auth" element={<AuthLayout />} />
+                <Route path={base_url + "auth"} element={<AuthLayout />} />
               </Routes>
               <ReactQueryDevtools />
             </AuthContextProvider>
