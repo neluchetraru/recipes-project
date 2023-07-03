@@ -1,14 +1,15 @@
 # Recipe project
 
 <hr>
-Search, create, and save your favorite recipes in one place!
+Search, create and save your favorite recipes in one place!
 
+## Project demo
+A demo run of the web application can be found [here](https://neluchetraru.github.io/recipes-project/). 
 
 ## ⭐ About this project
 
 <hr>
-In this web application, you can search for recipes of any kind. Besides searching, you can save your favorite recipes and create your own ones with just a few clicks. Check the demo 
-[here](https://neluchetraru.github.io/recipes-project/) .
+In this web application you can search recipes of any kind. Besides seraching, you can save your favorite recipes and as well as create your own ones with just a few clicks.
 
 ## 🛠 Built with
 
