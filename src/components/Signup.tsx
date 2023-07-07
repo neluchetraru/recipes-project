@@ -3,7 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/AuthContext";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Button, CardContent, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  CardContent,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { FirebaseError } from "firebase/app";
 import { AuthErrorCodes } from "firebase/auth";
 
@@ -17,6 +23,7 @@ const UserSignUpSchema = Yup.object().shape({
 
 const Signup = () => {
   const { createUser } = UserAuth();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -28,11 +35,14 @@ const Signup = () => {
     password: string;
   }) => {
     try {
+      setLoading(true);
       await createUser(email, password);
       navigate("/");
+      setLoading(false);
     } catch (e) {
       if (e instanceof FirebaseError && e.code == AuthErrorCodes.EMAIL_EXISTS)
         setError("This user already exists.");
+      setLoading(false);
     }
   };
   const formik = useFormik({
@@ -77,9 +87,27 @@ const Signup = () => {
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
       />
-      <Button variant="contained" color="primary" type="submit" sx={{ mt: 2 }}>
-        Sign Up
-      </Button>
+      {!loading ? (
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          sx={{ mt: 2 }}
+        >
+          Sign Up
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled
+          startIcon={<CircularProgress size={20} color="secondary" />}
+          sx={{ mt: 2 }}
+        >
+          Loading...
+        </Button>
+      )}
     </CardContent>
   );
 };

@@ -4,7 +4,14 @@
 Search, create and save your favorite recipes in one place!
 
 ## Project demo
-A demo run of the web application can be found [here](https://neluchetraru.github.io/recipes-project/). 
+A demo run of the web application can be found [here](https://neluchetraru.github.io/recipes-project/). Use the following credentials to log in to the main content:
+
+```Bash
+test@test.com
+test123
+```
+
+Or sign up with a new email for a full experience. 
 
 ## ⭐ About this project
 

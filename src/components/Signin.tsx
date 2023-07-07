@@ -3,7 +3,13 @@ import { UserAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Button, CardContent, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  CardContent,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 const UserSignInSchema = Yup.object().shape({
   email: Yup.string().required("Email is a required field!"),
@@ -14,6 +20,7 @@ const Signin = () => {
   const { signIn } = UserAuth();
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSignIn = async ({
     email,
@@ -23,10 +30,13 @@ const Signin = () => {
     password: string;
   }) => {
     try {
+      setLoading(true);
       await signIn(email, password);
       navigate("/");
+      setLoading(false);
     } catch (e) {
       setError("Invalid credentials!");
+      setLoading(false);
     }
   };
 
@@ -72,9 +82,27 @@ const Signin = () => {
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
       />
-      <Button variant="contained" color="primary" type="submit" sx={{ mt: 2 }}>
-        Sign In
-      </Button>
+      {!loading ? (
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          sx={{ mt: 2 }}
+        >
+          Sign In
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled
+          startIcon={<CircularProgress size={20} color="secondary" />}
+          sx={{ mt: 2 }}
+        >
+          Loading...
+        </Button>
+      )}
     </CardContent>
   );
 };
