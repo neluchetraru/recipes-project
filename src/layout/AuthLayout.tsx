@@ -1,10 +1,33 @@
-import { Box, Card, CardActions, CardHeader, Link } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardHeader,
+  Link,
+} from "@mui/material";
 import { useState } from "react";
 import Signin from "../components/Signin";
 import Signup from "../components/Signup";
+import { Google } from "@mui/icons-material";
+import { UserAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const AuthLayout = () => {
   const [page, setPage] = useState<"signup" | "signin">("signin");
+  const [loading, setLoading] = useState(false);
+  const { signInGoogle } = UserAuth();
+  const navigate = useNavigate();
+  const handleContinueGoogle = async () => {
+    try {
+      setLoading(true);
+      await signInGoogle();
+      navigate("/");
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+    }
+  };
 
   const pageHeader = page === "signin" ? "Sign In" : "Create a new account";
   const linkTitle =
@@ -26,6 +49,17 @@ const AuthLayout = () => {
           sx={{ textAlign: "center", margin: 2 }}
         />
         {page === "signin" ? <Signin /> : <Signup />}
+        <Box display="flex" justifyContent="center">
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleContinueGoogle}
+            disabled={loading}
+          >
+            <Google sx={{ mr: 1 }} color="action" />
+            {!loading ? "Continue with Google" : "Loading..."}
+          </Button>
+        </Box>
         <CardActions>
           <Link
             color="secondary"

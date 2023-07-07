@@ -12,15 +12,18 @@ import {
   onAuthStateChanged,
   User,
   UserCredential,
+  signInWithRedirect,
+  signInWithPopup,
 } from "firebase/auth";
 
-import { auth } from "../firebase";
+import { auth, googleProvider } from "../firebase";
 
 interface UserContextProps {
   createUser: (email: string, password: string) => Promise<UserCredential>;
   user: User | null | undefined;
   logout: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<UserCredential>;
+  signInGoogle: () => Promise<UserCredential>;
 }
 
 export const UserContext = createContext<UserContextProps>(
@@ -38,6 +41,8 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const signIn = (email: string, password: string) =>
     signInWithEmailAndPassword(auth, email, password);
 
+  const signInGoogle = () => signInWithPopup(auth, googleProvider);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -46,7 +51,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     return unsubscribe;
   }, []);
   return (
-    <UserContext.Provider value={{ createUser, user, logout, signIn }}>
+    <UserContext.Provider
+      value={{ createUser, user, logout, signIn, signInGoogle }}
+    >
       {children}
     </UserContext.Provider>
   );

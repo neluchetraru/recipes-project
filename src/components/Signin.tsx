@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
+  Box,
   Button,
   CardContent,
   CircularProgress,
@@ -82,27 +83,29 @@ const Signin = () => {
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
       />
-      {!loading ? (
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          sx={{ mt: 2 }}
-        >
-          Sign In
-        </Button>
-      ) : (
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          disabled
-          startIcon={<CircularProgress size={20} color="secondary" />}
-          sx={{ mt: 2 }}
-        >
-          Loading...
-        </Button>
-      )}
+      <Box display="flex" justifyContent="center">
+        {!loading ? (
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            sx={{ mt: 2 }}
+          >
+            Sign In
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            disabled
+            startIcon={<CircularProgress size={20} color="secondary" />}
+            sx={{ mt: 2 }}
+          >
+            Loading...
+          </Button>
+        )}
+      </Box>
     </CardContent>
   );
 };
