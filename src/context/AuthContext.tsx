@@ -12,7 +12,6 @@ import {
   onAuthStateChanged,
   User,
   UserCredential,
-  signInWithRedirect,
   signInWithPopup,
 } from "firebase/auth";
 
